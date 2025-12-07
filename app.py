@@ -48,20 +48,24 @@ if selection == "Dashboard General":
     if departamento != 'All':
         data_filtered = data_filtered[data_filtered['Department'] == departamento]
 
-    # Métricas de BI
+    # Métricas de BI (dinámicas)
     # Tasa de rotación
-    tasa_rotacion = (data_renuncias.shape[0] / data.shape[0]) * 100
+    tasa_rotacion = (data_filtered.shape[0] / data.shape[0]) * 100  # Se calcula solo con los datos filtrados
     
     # Promedio de antigüedad
-    promedio_antiguedad = data_renuncias['Antigüedad'].mean()
+    promedio_antiguedad = data_filtered['Antigüedad'].mean()  # Se calcula solo con los datos filtrados
 
     # Renuncias por JobRole
-    renuncias_jobrole = data_renuncias['JobRole'].value_counts().reset_index()
+    renuncias_jobrole = data_filtered['JobRole'].value_counts().reset_index()
     renuncias_jobrole.columns = ['JobRole', 'Renuncias']
+
+    # Usar columnas para las métricas (alinear a la misma altura)
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown(f"<div style='background-color: #f0f2f6; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);'><h3 style='text-align: center;'>Tasa de Rotación (%)</h3><p style='font-size: 24px; text-align: center;'>{round(tasa_rotacion, 2)}%</p></div>", unsafe_allow_html=True)
     
-    # Mostrar las métricas en el dashboard
-    st.metric("Tasa de Rotación (%)", round(tasa_rotacion, 2))  # Mostrar la tasa de rotación como porcentaje
-    st.metric("Promedio de Antigüedad (años)", round(promedio_antiguedad, 2))  # Mostrar el promedio de antigüedad en años
+    with col2:
+        st.markdown(f"<div style='background-color: #f0f2f6; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);'><h3 style='text-align: center;'>Promedio de Antigüedad (años)</h3><p style='font-size: 24px; text-align: center;'>{round(promedio_antiguedad, 2)}</p></div>", unsafe_allow_html=True)
 
     # Gráfico de Renuncias por Mes (sin mostrar el año, ordenado)
     data_filtered['Mes'] = data_filtered['FechaSalida'].dt.month_name()  # Extraemos el nombre del mes
@@ -125,7 +129,7 @@ elif selection == "Condiciones Laborales":
     fig7 = px.bar(carga_laboral, x='Satisfacción Laboral', y='Renuncias', title="Renuncias por Carga Laboral Percibida")
     st.plotly_chart(fig7)
 
-    # Página - Demográficos
+# Página - Demográficos
 elif selection == "Demográficos":
     st.title("Análisis Demográfico de Empleados que Renunciaron")
     
@@ -159,6 +163,7 @@ elif selection == "Demográficos":
     # Gráfico de Distancia desde Casa
     fig6 = px.scatter(data_filtered, x='DistanceFromHome', y='Antigüedad', title="Relación entre Distancia desde Casa y Antigüedad")
     st.plotly_chart(fig6)
+
 
 
 
