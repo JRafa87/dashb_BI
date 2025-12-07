@@ -45,9 +45,9 @@ if selection == "Dashboard General":
     if departamento != 'All':
         data_filtered = data_filtered[data_filtered['Department'] == departamento]
 
-    # Gráfico de Renuncias por Mes
-    renuncias_mes = data_filtered.groupby('MesAnoRenuncia').size().reset_index(name='Renuncias')
-    fig1 = px.line(renuncias_mes, x='MesAnoRenuncia', y='Renuncias', title='Renuncias por Mes')
+    # Gráfico de Renuncias por Mes (sin mostrar el año)
+    renuncias_mes = data_filtered.groupby(data_filtered['FechaSalida'].dt.month_name()).size().reset_index(name='Renuncias')
+    fig1 = px.line(renuncias_mes, x='FechaSalida', y='Renuncias', title='Renuncias por Mes')
     st.plotly_chart(fig1)
 
     # Gráfico de Renuncias por Año
@@ -104,10 +104,6 @@ elif selection == "Condiciones Laborales":
     tipo_contrato.columns = ['StockOptionLevel', 'Count']
     fig3 = px.pie(tipo_contrato, names='StockOptionLevel', values='Count', title="Distribución de Tipo de Contrato")
     st.plotly_chart(fig3)
-    
-    # Gráfico de Satisfacción Laboral
-    fig4 = px.bar(data_filtered, x='Satisfaction', y='Renuncias', title="Satisfacción Laboral vs. Renuncias")
-    st.plotly_chart(fig4)
 
 # Página - Demográficos
 elif selection == "Demográficos":
@@ -138,6 +134,7 @@ elif selection == "Demográficos":
     estado_civil.columns = ['Estado Civil', 'Renuncias']
     fig7 = px.pie(estado_civil, names='Estado Civil', values='Renuncias', title="Distribución de Estado Civil de los Empleados que Renunciaron")
     st.plotly_chart(fig7)
+
 
 
 
