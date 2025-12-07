@@ -38,8 +38,8 @@ if selection == "Dashboard General":
         data_filtered = data_filtered[data_filtered['Department'] == departamento]
 
     # Filtro por año de renuncia
-    año_renuncia = st.selectbox("Selecciona el Año de Renuncia", sorted(data_filtered['AñoRenuncia'].unique()))
-    data_filtered = data_filtered[data_filtered['AñoRenuncia'] == año_renuncia]
+    #año_renuncia = st.selectbox("Selecciona el Año de Renuncia", sorted(data_filtered['AñoRenuncia'].unique()))
+    #data_filtered = data_filtered[data_filtered['AñoRenuncia'] == año_renuncia]
     
     # Gráfico de Tasa de Rotación (Renuncias por mes)
     renuncias_mes = data_filtered.groupby(data_filtered['FechaSalida'].dt.to_period("M")).size().reset_index(name='Renuncias')
