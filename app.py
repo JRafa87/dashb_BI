@@ -16,9 +16,11 @@ data_renuncias = data[data['Attrition'] == 'Yes']
 # Calcular antigüedad
 data_renuncias['Antigüedad'] = (data_renuncias['FechaSalida'] - data_renuncias['FechaIngreso']).dt.days / 365
 
+# Crear una columna de mes y año de la fecha de salida
+data_renuncias['MesAnoRenuncia'] = data_renuncias['FechaSalida'].dt.to_period('M')
+
 # Agregar una columna con el año de la renuncia
 data_renuncias['AñoRenuncia'] = data_renuncias['FechaSalida'].dt.year
-data_renuncias['MesRenuncia'] = data_renuncias['FechaSalida'].dt.month_name()  # Nombre del mes
 
 # Crear el menú de navegación
 st.sidebar.title('Navegación')
@@ -37,10 +39,10 @@ if selection == "Dashboard General":
         data_filtered = data_renuncias[data_renuncias['Gender'] == genero]
     if departamento != 'All':
         data_filtered = data_filtered[data_filtered['Department'] == departamento]
-    
+
     # Gráfico de Tasa de Rotación (Renuncias por mes y año)
-    renuncias_mes_ano = data_filtered.groupby([data_filtered['FechaSalida'].dt.to_period("M"), 'AñoRenuncia']).size().reset_index(name='Renuncias')
-    fig1 = px.line(renuncias_mes_ano, x='FechaSalida', y='Renuncias', color='AñoRenuncia', title='Renuncias por Mes y Año')
+    renuncias_mes_ano = data_filtered.groupby('MesAnoRenuncia').size().reset_index(name='Renuncias')
+    fig1 = px.line(renuncias_mes_ano, x='MesAnoRenuncia', y='Renuncias', title='Renuncias por Mes y Año')
     st.plotly_chart(fig1)
 
     # Gráfico de distribución de antigüedad
@@ -91,3 +93,4 @@ elif selection == "Demográficos":
     # Gráfico de distancia desde casa
     fig6 = px.scatter(data_filtered, x='DistanceFromHome', y='Antigüedad', title="Relación entre Distancia desde Casa y Antigüedad")
     st.plotly_chart(fig6)
+
