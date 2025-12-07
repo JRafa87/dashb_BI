@@ -6,15 +6,6 @@ import plotly.express as px
 file_path = 'dataset_empleados.csv'  # Asegúrate de que el archivo CSV esté en la misma carpeta que app.py
 data = pd.read_csv(file_path)
 
-# Verificar las primeras filas del dataset para asegurarnos de que se cargue correctamente
-st.write("Primeras filas del dataset:", data.head())
-
-# Verificar las columnas del dataframe
-st.write("Columnas del dataset:", data.columns)
-
-# Verificar los valores únicos en la columna tipo_contrato
-st.write("Valores únicos en la columna 'tipo_contrato':", data['tipo_contrato'].unique())
-
 # Convertir las fechas a tipo datetime
 data['FechaIngreso'] = pd.to_datetime(data['FechaIngreso'])
 data['FechaSalida'] = pd.to_datetime(data['FechaSalida'])
@@ -142,6 +133,7 @@ elif selection == "Demográficos":
     # Gráfico de Distancia desde Casa
     fig6 = px.scatter(data_filtered, x='DistanceFromHome', y='Antigüedad', title="Relación entre Distancia desde Casa y Antigüedad")
     st.plotly_chart(fig6)
+
 
 
 
