@@ -70,9 +70,10 @@ elif selection == "Condiciones Laborales":
     if departamento != 'All':
         data_filtered = data_filtered[data_filtered['Department'] == departamento]
     
-    # Gráfico circular de tipo de contrato
+    # Corregir el gráfico de tipo de contrato
     tipo_contrato = data_filtered['StockOptionLevel'].value_counts().reset_index()
-    fig3 = px.pie(tipo_contrato, names='index', values='StockOptionLevel', title="Distribución de Tipo de Contrato")
+    tipo_contrato.columns = ['StockOptionLevel', 'Count']  # Renombrar las columnas adecuadamente
+    fig3 = px.pie(tipo_contrato, names='StockOptionLevel', values='Count', title="Distribución de Tipo de Contrato")
     st.plotly_chart(fig3)
     
     # Gráfico de satisfacción salarial
@@ -105,6 +106,7 @@ elif selection == "Demográficos":
     # Gráfico de distancia desde casa
     fig6 = px.scatter(data_filtered, x='DistanceFromHome', y='Antigüedad', title="Relación entre Distancia desde Casa y Antigüedad")
     st.plotly_chart(fig6)
+
 
 
 
