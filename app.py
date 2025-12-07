@@ -45,9 +45,11 @@ if selection == "Dashboard General":
     if departamento != 'All':
         data_filtered = data_filtered[data_filtered['Department'] == departamento]
 
-    # Gráfico de Renuncias por Mes (sin mostrar el año)
-    renuncias_mes = data_filtered.groupby(data_filtered['FechaSalida'].dt.month_name()).size().reset_index(name='Renuncias')
-    fig1 = px.line(renuncias_mes, x='FechaSalida', y='Renuncias', title='Renuncias por Mes')
+    # Gráfico de Renuncias por Mes (sin mostrar el año, ordenado)
+    data_filtered['Mes'] = data_filtered['FechaSalida'].dt.month_name()  # Extraemos el nombre del mes
+    mes_ordenado = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    renuncias_mes = data_filtered.groupby('Mes').size().reindex(mes_ordenado).reset_index(name='Renuncias')
+    fig1 = px.line(renuncias_mes, x='Mes', y='Renuncias', title='Renuncias por Mes')
     st.plotly_chart(fig1)
 
     # Gráfico de Renuncias por Año
@@ -60,12 +62,6 @@ if selection == "Dashboard General":
     job_role_renuncias.columns = ['JobRole', 'Renuncias']
     fig3 = px.bar(job_role_renuncias, x='JobRole', y='Renuncias', title="Job Role con Más Renuncias")
     st.plotly_chart(fig3)
-
-    # Gráfico de Tipo de Contrato
-    tipo_contrato = data_filtered['StockOptionLevel'].value_counts().reset_index()
-    tipo_contrato.columns = ['Tipo de Contrato', 'Renuncias']
-    fig4 = px.pie(tipo_contrato, names='Tipo de Contrato', values='Renuncias', title="Distribución de Tipo de Contrato")
-    st.plotly_chart(fig4)
 
     # Gráfico de Distribución de Antigüedad
     fig5 = px.histogram(data_filtered, x='Antigüedad', nbins=20, title="Distribución de Antigüedad de Empleados que Renunciaron")
@@ -101,9 +97,15 @@ elif selection == "Condiciones Laborales":
 
     # Gráfico circular de tipo de contrato
     tipo_contrato = data_filtered['StockOptionLevel'].value_counts().reset_index()
-    tipo_contrato.columns = ['StockOptionLevel', 'Count']
-    fig3 = px.pie(tipo_contrato, names='StockOptionLevel', values='Count', title="Distribución de Tipo de Contrato")
+    tipo_contrato.columns = ['Tipo de Contrato', 'Renuncias']
+    fig3 = px.pie(tipo_contrato, names='Tipo de Contrato', values='Renuncias', title="Distribución de Tipo de Contrato")
     st.plotly_chart(fig3)
+    
+    # Gráfico de Estado Civil
+    estado_civil = data_filtered['MaritalStatus'].value_counts().reset_index()
+    estado_civil.columns = ['Estado Civil', 'Renuncias']
+    fig4 = px.pie(estado_civil, names='Estado Civil', values='Renuncias', title="Distribución de Estado Civil de los Empleados que Renunciaron")
+    st.plotly_chart(fig4)
 
 # Página - Demográficos
 elif selection == "Demográficos":
@@ -128,12 +130,6 @@ elif selection == "Demográficos":
     # Gráfico de Distancia desde Casa
     fig6 = px.scatter(data_filtered, x='DistanceFromHome', y='Antigüedad', title="Relación entre Distancia desde Casa y Antigüedad")
     st.plotly_chart(fig6)
-
-    # Gráfico de Estado Civil
-    estado_civil = data_filtered['MaritalStatus'].value_counts().reset_index()
-    estado_civil.columns = ['Estado Civil', 'Renuncias']
-    fig7 = px.pie(estado_civil, names='Estado Civil', values='Renuncias', title="Distribución de Estado Civil de los Empleados que Renunciaron")
-    st.plotly_chart(fig7)
 
 
 
