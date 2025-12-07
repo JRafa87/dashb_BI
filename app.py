@@ -19,6 +19,9 @@ data_renuncias['Antigüedad'] = (data_renuncias['FechaSalida'] - data_renuncias[
 # Crear una columna de mes y año de la fecha de salida
 data_renuncias['MesAnoRenuncia'] = data_renuncias['FechaSalida'].dt.to_period('M')
 
+# Convertir 'MesAnoRenuncia' a formato string (Mes-Año)
+data_renuncias['MesAnoRenuncia'] = data_renuncias['MesAnoRenuncia'].dt.strftime('%b-%Y')  # Ej: "Jan-2023"
+
 # Agregar una columna con el año de la renuncia
 data_renuncias['AñoRenuncia'] = data_renuncias['FechaSalida'].dt.year
 
@@ -41,9 +44,6 @@ if selection == "Dashboard General":
         data_filtered = data_filtered[data_filtered['Gender'] == genero]
     if departamento != 'All':
         data_filtered = data_filtered[data_filtered['Department'] == departamento]
-
-    # Asegurarse de que la columna 'MesAnoRenuncia' está en data_filtered
-    data_filtered['MesAnoRenuncia'] = data_filtered['FechaSalida'].dt.to_period('M')
 
     # Gráfico de Tasa de Rotación (Renuncias por mes y año)
     renuncias_mes_ano = data_filtered.groupby('MesAnoRenuncia').size().reset_index(name='Renuncias')
@@ -69,9 +69,6 @@ elif selection == "Condiciones Laborales":
         data_filtered = data_filtered[data_filtered['Gender'] == genero]
     if departamento != 'All':
         data_filtered = data_filtered[data_filtered['Department'] == departamento]
-    
-    # Asegurarse de que la columna 'MesAnoRenuncia' está en data_filtered
-    data_filtered['MesAnoRenuncia'] = data_filtered['FechaSalida'].dt.to_period('M')
     
     # Gráfico circular de tipo de contrato
     tipo_contrato = data_filtered['StockOptionLevel'].value_counts().reset_index()
@@ -99,7 +96,7 @@ elif selection == "Demográficos":
         data_filtered = data_filtered[data_filtered['Department'] == departamento]
 
     # Asegurarse de que la columna 'MesAnoRenuncia' está en data_filtered
-    data_filtered['MesAnoRenuncia'] = data_filtered['FechaSalida'].dt.to_period('M')
+    data_filtered['MesAnoRenuncia'] = data_filtered['FechaSalida'].dt.strftime('%b-%Y')  # Ej: "Jan-2023"
     
     # Gráfico de distribución por edad
     fig5 = px.histogram(data_filtered, x='Age', nbins=15, title="Distribución de Edad de Empleados que Renunciaron")
@@ -108,5 +105,6 @@ elif selection == "Demográficos":
     # Gráfico de distancia desde casa
     fig6 = px.scatter(data_filtered, x='DistanceFromHome', y='Antigüedad', title="Relación entre Distancia desde Casa y Antigüedad")
     st.plotly_chart(fig6)
+
 
 
