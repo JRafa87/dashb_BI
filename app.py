@@ -67,18 +67,6 @@ if selection == "Dashboard General":
     fig5 = px.histogram(data_filtered, x='Antigüedad', nbins=20, title="Distribución de Antigüedad de Empleados que Renunciaron")
     st.plotly_chart(fig5)
 
-    # Gráfico de Última Promoción
-    ultima_promocion = data_filtered['YearsSinceLastPromotion'].value_counts().reset_index()
-    ultima_promocion.columns = ['Años Desde Última Promoción', 'Renuncias']
-    fig6 = px.bar(ultima_promocion, x='Años Desde Última Promoción', y='Renuncias', title="Renuncias por Años Desde Última Promoción")
-    st.plotly_chart(fig6)
-
-    # Gráfico de Carga Laboral Percibida
-    carga_laboral = data_filtered['JobSatisfaction'].value_counts().reset_index()
-    carga_laboral.columns = ['Satisfacción Laboral', 'Renuncias']
-    fig7 = px.bar(carga_laboral, x='Satisfacción Laboral', y='Renuncias', title="Renuncias por Carga Laboral Percibida")
-    st.plotly_chart(fig7)
-
 # Página - Condiciones Laborales
 elif selection == "Condiciones Laborales":
     st.title("Análisis de Condiciones Laborales")
@@ -95,17 +83,30 @@ elif selection == "Condiciones Laborales":
     if departamento != 'All':
         data_filtered = data_filtered[data_filtered['Department'] == departamento]
 
-    # Gráfico circular de tipo de contrato
-    tipo_contrato = data_filtered['StockOptionLevel'].value_counts().reset_index()
+    # Gráfico circular de tipo de contrato (solo Indefinido y Temporal)
+    tipo_contrato = data_filtered[data_filtered['StockOptionLevel'].isin(['Indefinido', 'Temporal'])]  # Filtrar solo Indefinido y Temporal
+    tipo_contrato = tipo_contrato['StockOptionLevel'].value_counts().reset_index()
     tipo_contrato.columns = ['Tipo de Contrato', 'Renuncias']
     fig3 = px.pie(tipo_contrato, names='Tipo de Contrato', values='Renuncias', title="Distribución de Tipo de Contrato")
     st.plotly_chart(fig3)
-    
+
     # Gráfico de Estado Civil
     estado_civil = data_filtered['MaritalStatus'].value_counts().reset_index()
     estado_civil.columns = ['Estado Civil', 'Renuncias']
     fig4 = px.pie(estado_civil, names='Estado Civil', values='Renuncias', title="Distribución de Estado Civil de los Empleados que Renunciaron")
     st.plotly_chart(fig4)
+
+    # Gráfico de Última Promoción
+    ultima_promocion = data_filtered['YearsSinceLastPromotion'].value_counts().reset_index()
+    ultima_promocion.columns = ['Años Desde Última Promoción', 'Renuncias']
+    fig6 = px.bar(ultima_promocion, x='Años Desde Última Promoción', y='Renuncias', title="Renuncias por Años Desde Última Promoción")
+    st.plotly_chart(fig6)
+
+    # Gráfico de Carga Laboral Percibida
+    carga_laboral = data_filtered['JobSatisfaction'].value_counts().reset_index()
+    carga_laboral.columns = ['Satisfacción Laboral', 'Renuncias']
+    fig7 = px.bar(carga_laboral, x='Satisfacción Laboral', y='Renuncias', title="Renuncias por Carga Laboral Percibida")
+    st.plotly_chart(fig7)
 
 # Página - Demográficos
 elif selection == "Demográficos":
@@ -130,6 +131,10 @@ elif selection == "Demográficos":
     # Gráfico de Distancia desde Casa
     fig6 = px.scatter(data_filtered, x='DistanceFromHome', y='Antigüedad', title="Relación entre Distancia desde Casa y Antigüedad")
     st.plotly_chart(fig6)
+
+
+
+
 
 
 
