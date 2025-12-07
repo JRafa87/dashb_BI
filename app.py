@@ -62,10 +62,20 @@ if selection == "Dashboard General":
     # Usar columnas para las métricas (alinear a la misma altura)
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown(f"<div style='background-color: #f0f2f6; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);'><h3 style='text-align: center;'>Tasa de Rotación (%)</h3><p style='font-size: 24px; text-align: center;'>{round(tasa_rotacion, 2)}%</p></div>", unsafe_allow_html=True)
+        st.markdown(f"""
+        <div style='background-color: #f9f9f9; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);'>
+            <h3 style='color: #4CAF50; text-align: center;'>Tasa de Rotación (%)</h3>
+            <p style='font-size: 32px; font-weight: bold; text-align: center;'>{round(tasa_rotacion, 2)}%</p>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col2:
-        st.markdown(f"<div style='background-color: #f0f2f6; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);'><h3 style='text-align: center;'>Promedio de Antigüedad (años)</h3><p style='font-size: 24px; text-align: center;'>{round(promedio_antiguedad, 2)}</p></div>", unsafe_allow_html=True)
+        st.markdown(f"""
+        <div style='background-color: #f9f9f9; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);'>
+            <h3 style='color: #2196F3; text-align: center;'>Promedio de Antigüedad (años)</h3>
+            <p style='font-size: 32px; font-weight: bold; text-align: center;'>{round(promedio_antiguedad, 2)}</p>
+        </div>
+        """, unsafe_allow_html=True)
 
     # Gráfico de Renuncias por Mes (sin mostrar el año, ordenado)
     data_filtered['Mes'] = data_filtered['FechaSalida'].dt.month_name()  # Extraemos el nombre del mes
@@ -163,6 +173,7 @@ elif selection == "Demográficos":
     # Gráfico de Distancia desde Casa
     fig6 = px.scatter(data_filtered, x='DistanceFromHome', y='Antigüedad', title="Relación entre Distancia desde Casa y Antigüedad")
     st.plotly_chart(fig6)
+
 
 
 
