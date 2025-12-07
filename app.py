@@ -84,17 +84,11 @@ elif selection == "Condiciones Laborales":
         data_filtered = data_filtered[data_filtered['Department'] == departamento]
 
     # Gráfico circular de tipo de contrato (solo Indefinido y Temporal)
-    tipo_contrato = data_filtered[data_filtered['StockOptionLevel'].isin(['Indefinido', 'Temporal'])]  # Filtrar solo Indefinido y Temporal
-    tipo_contrato = tipo_contrato['StockOptionLevel'].value_counts().reset_index()
+    tipo_contrato = data_filtered[data_filtered['Tipo_Contrato'].isin(['Indefinido', 'Temporal'])]  # Filtrar solo Indefinido y Temporal
+    tipo_contrato = tipo_contrato['Tipo_Contrato'].value_counts().reset_index()
     tipo_contrato.columns = ['Tipo de Contrato', 'Renuncias']
     fig3 = px.pie(tipo_contrato, names='Tipo de Contrato', values='Renuncias', title="Distribución de Tipo de Contrato")
     st.plotly_chart(fig3)
-
-    # Gráfico de Estado Civil
-    estado_civil = data_filtered['MaritalStatus'].value_counts().reset_index()
-    estado_civil.columns = ['Estado Civil', 'Renuncias']
-    fig4 = px.pie(estado_civil, names='Estado Civil', values='Renuncias', title="Distribución de Estado Civil de los Empleados que Renunciaron")
-    st.plotly_chart(fig4)
 
     # Gráfico de Última Promoción
     ultima_promocion = data_filtered['YearsSinceLastPromotion'].value_counts().reset_index()
@@ -124,6 +118,12 @@ elif selection == "Demográficos":
     if departamento != 'All':
         data_filtered = data_filtered[data_filtered['Department'] == departamento]
 
+    # Gráfico de Estado Civil
+    estado_civil = data_filtered['MaritalStatus'].value_counts().reset_index()
+    estado_civil.columns = ['Estado Civil', 'Renuncias']
+    fig4 = px.pie(estado_civil, names='Estado Civil', values='Renuncias', title="Distribución de Estado Civil de los Empleados que Renunciaron")
+    st.plotly_chart(fig4)
+
     # Gráfico de Distribución por Edad
     fig5 = px.histogram(data_filtered, x='Age', nbins=15, title="Distribución de Edad de Empleados que Renunciaron")
     st.plotly_chart(fig5)
@@ -131,6 +131,7 @@ elif selection == "Demográficos":
     # Gráfico de Distancia desde Casa
     fig6 = px.scatter(data_filtered, x='DistanceFromHome', y='Antigüedad', title="Relación entre Distancia desde Casa y Antigüedad")
     st.plotly_chart(fig6)
+
 
 
 
