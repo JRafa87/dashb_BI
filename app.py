@@ -33,9 +33,14 @@ selection = st.sidebar.radio("Selecciona una sección", ["Dashboard General", "C
 if selection == "Dashboard General":
     st.title("Dashboard General: Tendencias de Renuncias")
     
-    # Filtros para Dashboard General (por género y departamento)
-    genero = st.selectbox("Selecciona el Género", ['All'] + list(data_renuncias['Gender'].unique()))
-    departamento = st.selectbox("Selecciona el Departamento", ['All'] + list(data_renuncias['Department'].unique()))
+    # Uso de columnas para filtros (más compacto)
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        genero = st.selectbox("Selecciona el Género", ['All'] + list(data_renuncias['Gender'].unique()))
+    
+    with col2:
+        departamento = st.selectbox("Selecciona el Departamento", ['All'] + list(data_renuncias['Department'].unique()))
 
     # Filtrar los datos según los filtros seleccionados
     data_filtered = data_renuncias.copy()  # Crear una copia de data_renuncias para aplicar filtros
@@ -72,8 +77,13 @@ elif selection == "Condiciones Laborales":
     st.title("Análisis de Condiciones Laborales")
     
     # Filtros para Condiciones Laborales (por género y departamento)
-    genero = st.selectbox("Selecciona el Género", ['All'] + list(data_renuncias['Gender'].unique()))
-    departamento = st.selectbox("Selecciona el Departamento", ['All'] + list(data_renuncias['Department'].unique()))
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        genero = st.selectbox("Selecciona el Género", ['All'] + list(data_renuncias['Gender'].unique()))
+    
+    with col2:
+        departamento = st.selectbox("Selecciona el Departamento", ['All'] + list(data_renuncias['Department'].unique()))
 
     # Filtrar los datos según los filtros seleccionados
     data_filtered = data_renuncias.copy()  # Crear una copia de data_renuncias para aplicar filtros
@@ -109,8 +119,13 @@ elif selection == "Demográficos":
     st.title("Análisis Demográfico de Empleados que Renunciaron")
     
     # Filtros para Demográficos (por género y departamento)
-    genero = st.selectbox("Selecciona el Género", ['All'] + list(data_renuncias['Gender'].unique()))
-    departamento = st.selectbox("Selecciona el Departamento", ['All'] + list(data_renuncias['Department'].unique()))
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        genero = st.selectbox("Selecciona el Género", ['All'] + list(data_renuncias['Gender'].unique()))
+    
+    with col2:
+        departamento = st.selectbox("Selecciona el Departamento", ['All'] + list(data_renuncias['Department'].unique()))
 
     # Filtrar los datos según los filtros seleccionados
     data_filtered = data_renuncias.copy()  # Crear una copia de data_renuncias para aplicar filtros
@@ -133,6 +148,7 @@ elif selection == "Demográficos":
     # Gráfico de Distancia desde Casa
     fig6 = px.scatter(data_filtered, x='DistanceFromHome', y='Antigüedad', title="Relación entre Distancia desde Casa y Antigüedad")
     st.plotly_chart(fig6)
+
 
 
 
