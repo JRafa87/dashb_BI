@@ -125,6 +125,40 @@ elif selection == "Condiciones Laborales":
     fig7 = px.bar(carga_laboral, x='Satisfacción Laboral', y='Renuncias', title="Renuncias por Carga Laboral Percibida")
     st.plotly_chart(fig7)
 
+    # Página - Demográficos
+elif selection == "Demográficos":
+    st.title("Análisis Demográfico de Empleados que Renunciaron")
+    
+    # Filtros para Demográficos (por género y departamento)
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        genero = st.selectbox("Selecciona el Género", ['All'] + list(data_renuncias['Gender'].unique()))
+    
+    with col2:
+        departamento = st.selectbox("Selecciona el Departamento", ['All'] + list(data_renuncias['Department'].unique()))
+
+    # Filtrar los datos según los filtros seleccionados
+    data_filtered = data_renuncias.copy()  # Crear una copia de data_renuncias para aplicar filtros
+
+    if genero != 'All':
+        data_filtered = data_filtered[data_filtered['Gender'] == genero]
+    if departamento != 'All':
+        data_filtered = data_filtered[data_filtered['Department'] == departamento]
+
+    # Gráfico de Estado Civil
+    estado_civil = data_filtered['MaritalStatus'].value_counts().reset_index()
+    estado_civil.columns = ['Estado Civil', 'Renuncias']
+    fig4 = px.pie(estado_civil, names='Estado Civil', values='Renuncias', title="Distribución de Estado Civil de los Empleados que Renunciaron")
+    st.plotly_chart(fig4)
+
+    # Gráfico de Distribución por Edad
+    fig5 = px.histogram(data_filtered, x='Age', nbins=15, title="Distribución de Edad de Empleados que Renunciaron")
+    st.plotly_chart(fig5)
+    
+    # Gráfico de Distancia desde Casa
+    fig6 = px.scatter(data_filtered, x='DistanceFromHome', y='Antigüedad', title="Relación entre Distancia desde Casa y Antigüedad")
+    st.plotly_chart(fig6)
 
 
 
