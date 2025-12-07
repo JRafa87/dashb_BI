@@ -6,6 +6,15 @@ import plotly.express as px
 file_path = 'dataset_empleados.csv'  # Asegúrate de que el archivo CSV esté en la misma carpeta que app.py
 data = pd.read_csv(file_path)
 
+# Verificar las primeras filas del dataset para asegurarnos de que se cargue correctamente
+st.write("Primeras filas del dataset:", data.head())
+
+# Verificar las columnas del dataframe
+st.write("Columnas del dataset:", data.columns)
+
+# Verificar los valores únicos en la columna tipo_contrato
+st.write("Valores únicos en la columna 'tipo_contrato':", data['tipo_contrato'].unique())
+
 # Convertir las fechas a tipo datetime
 data['FechaIngreso'] = pd.to_datetime(data['FechaIngreso'])
 data['FechaSalida'] = pd.to_datetime(data['FechaSalida'])
@@ -83,11 +92,13 @@ elif selection == "Condiciones Laborales":
     if departamento != 'All':
         data_filtered = data_filtered[data_filtered['Department'] == departamento]
 
-    # Gráfico circular de tipo de contrato (solo Indefinido y Temporal)
-    tipo_contrato = data_filtered[data_filtered['tipo_contrato'].isin(['Indefinido', 'Temporal'])]  # Filtrar solo Indefinido y Temporal
-    tipo_contrato = tipo_contrato['tipo_contrato'].value_counts().reset_index()
-    tipo_contrato.columns = ['Tipo de Contrato', 'Cantidad de Renuncias']  # Cambié "Renuncias" a "Cantidad de Renuncias"
-    fig3 = px.pie(tipo_contrato, names='Tipo de Contrato', values='Cantidad de Renuncias', title="Distribución de Tipo de Contrato")
+    # Filtrar solo los empleados con contrato Indefinido o Temporal
+    tipo_contrato = data_filtered[data_filtered['tipo_contrato'].isin(['indefinido', 'temporal'])]  # Filtrar solo Indefinido y Temporal
+    tipo_contrato_count = tipo_contrato['tipo_contrato'].value_counts().reset_index()
+    tipo_contrato_count.columns = ['Tipo de Contrato', 'Cantidad de Renuncias']  # Renombramos la columna a "Cantidad de Renuncias"
+
+    # Gráfico circular de tipo de contrato
+    fig3 = px.pie(tipo_contrato_count, names='Tipo de Contrato', values='Cantidad de Renuncias', title="Distribución de Tipo de Contrato")
     st.plotly_chart(fig3)
 
     # Gráfico de Última Promoción
@@ -131,6 +142,7 @@ elif selection == "Demográficos":
     # Gráfico de Distancia desde Casa
     fig6 = px.scatter(data_filtered, x='DistanceFromHome', y='Antigüedad', title="Relación entre Distancia desde Casa y Antigüedad")
     st.plotly_chart(fig6)
+
 
 
 
