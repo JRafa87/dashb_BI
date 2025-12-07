@@ -33,9 +33,8 @@ selection = st.sidebar.radio("Selecciona una sección", ["Dashboard General", "C
 if selection == "Dashboard General":
     st.title("Dashboard General: Tendencias de Renuncias")
     
-    # Uso de columnas para filtros (más compacto)
+    # Filtros para Dashboard General (por género y departamento)
     col1, col2 = st.columns(2)
-    
     with col1:
         genero = st.selectbox("Selecciona el Género", ['All'] + list(data_renuncias['Gender'].unique()))
     
@@ -44,11 +43,25 @@ if selection == "Dashboard General":
 
     # Filtrar los datos según los filtros seleccionados
     data_filtered = data_renuncias.copy()  # Crear una copia de data_renuncias para aplicar filtros
-
     if genero != 'All':
         data_filtered = data_filtered[data_filtered['Gender'] == genero]
     if departamento != 'All':
         data_filtered = data_filtered[data_filtered['Department'] == departamento]
+
+    # Métricas de BI
+    # Tasa de rotación
+    tasa_rotacion = (data_renuncias.shape[0] / data.shape[0]) * 100
+    
+    # Promedio de antigüedad
+    promedio_antiguedad = data_renuncias['Antigüedad'].mean()
+
+    # Renuncias por JobRole
+    renuncias_jobrole = data_renuncias['JobRole'].value_counts().reset_index()
+    renuncias_jobrole.columns = ['JobRole', 'Renuncias']
+    
+    # Mostrar las métricas en el dashboard
+    st.metric("Tasa de Rotación (%)", round(tasa_rotacion, 2))  # Mostrar la tasa de rotación como porcentaje
+    st.metric("Promedio de Antigüedad (años)", round(promedio_antiguedad, 2))  # Mostrar el promedio de antigüedad en años
 
     # Gráfico de Renuncias por Mes (sin mostrar el año, ordenado)
     data_filtered['Mes'] = data_filtered['FechaSalida'].dt.month_name()  # Extraemos el nombre del mes
@@ -62,10 +75,8 @@ if selection == "Dashboard General":
     fig2 = px.bar(renuncias_ano, x='AñoRenuncia', y='Renuncias', title='Renuncias por Año')
     st.plotly_chart(fig2)
 
-    # Gráfico de Job Role con más Renuncias
-    job_role_renuncias = data_filtered['JobRole'].value_counts().reset_index()
-    job_role_renuncias.columns = ['JobRole', 'Renuncias']
-    fig3 = px.bar(job_role_renuncias, x='JobRole', y='Renuncias', title="Job Role con Más Renuncias")
+    # Gráfico de Renuncias por Job Role (barras)
+    fig3 = px.bar(renuncias_jobrole, x='JobRole', y='Renuncias', title="Renuncias por Job Role")
     st.plotly_chart(fig3)
 
     # Gráfico de Distribución de Antigüedad
@@ -114,40 +125,7 @@ elif selection == "Condiciones Laborales":
     fig7 = px.bar(carga_laboral, x='Satisfacción Laboral', y='Renuncias', title="Renuncias por Carga Laboral Percibida")
     st.plotly_chart(fig7)
 
-# Página - Demográficos
-elif selection == "Demográficos":
-    st.title("Análisis Demográfico de Empleados que Renunciaron")
-    
-    # Filtros para Demográficos (por género y departamento)
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        genero = st.selectbox("Selecciona el Género", ['All'] + list(data_renuncias['Gender'].unique()))
-    
-    with col2:
-        departamento = st.selectbox("Selecciona el Departamento", ['All'] + list(data_renuncias['Department'].unique()))
 
-    # Filtrar los datos según los filtros seleccionados
-    data_filtered = data_renuncias.copy()  # Crear una copia de data_renuncias para aplicar filtros
-
-    if genero != 'All':
-        data_filtered = data_filtered[data_filtered['Gender'] == genero]
-    if departamento != 'All':
-        data_filtered = data_filtered[data_filtered['Department'] == departamento]
-
-    # Gráfico de Estado Civil
-    estado_civil = data_filtered['MaritalStatus'].value_counts().reset_index()
-    estado_civil.columns = ['Estado Civil', 'Renuncias']
-    fig4 = px.pie(estado_civil, names='Estado Civil', values='Renuncias', title="Distribución de Estado Civil de los Empleados que Renunciaron")
-    st.plotly_chart(fig4)
-
-    # Gráfico de Distribución por Edad
-    fig5 = px.histogram(data_filtered, x='Age', nbins=15, title="Distribución de Edad de Empleados que Renunciaron")
-    st.plotly_chart(fig5)
-    
-    # Gráfico de Distancia desde Casa
-    fig6 = px.scatter(data_filtered, x='DistanceFromHome', y='Antigüedad', title="Relación entre Distancia desde Casa y Antigüedad")
-    st.plotly_chart(fig6)
 
 
 
