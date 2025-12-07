@@ -18,6 +18,7 @@ data_renuncias['Antigüedad'] = (data_renuncias['FechaSalida'] - data_renuncias[
 
 # Agregar una columna con el año de la renuncia
 data_renuncias['AñoRenuncia'] = data_renuncias['FechaSalida'].dt.year
+data_renuncias['MesRenuncia'] = data_renuncias['FechaSalida'].dt.month_name()  # Nombre del mes
 
 # Crear el menú de navegación
 st.sidebar.title('Navegación')
@@ -36,14 +37,10 @@ if selection == "Dashboard General":
         data_filtered = data_renuncias[data_renuncias['Gender'] == genero]
     if departamento != 'All':
         data_filtered = data_filtered[data_filtered['Department'] == departamento]
-
-    # Filtro por año de renuncia
-    #año_renuncia = st.selectbox("Selecciona el Año de Renuncia", sorted(data_filtered['AñoRenuncia'].unique()))
-    #data_filtered = data_filtered[data_filtered['AñoRenuncia'] == año_renuncia]
     
-    # Gráfico de Tasa de Rotación (Renuncias por mes)
-    renuncias_mes = data_filtered.groupby(data_filtered['FechaSalida'].dt.to_period("M")).size().reset_index(name='Renuncias')
-    fig1 = px.line(renuncias_mes, x='FechaSalida', y='Renuncias', title='Renuncias por Mes')
+    # Gráfico de Tasa de Rotación (Renuncias por mes y año)
+    renuncias_mes_ano = data_filtered.groupby([data_filtered['FechaSalida'].dt.to_period("M"), 'AñoRenuncia']).size().reset_index(name='Renuncias')
+    fig1 = px.line(renuncias_mes_ano, x='FechaSalida', y='Renuncias', color='AñoRenuncia', title='Renuncias por Mes y Año')
     st.plotly_chart(fig1)
 
     # Gráfico de distribución de antigüedad
