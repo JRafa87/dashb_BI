@@ -72,7 +72,7 @@ if selection == "Dashboard General":
     with col2:
         st.markdown(f"""
         <div style='background-color: #f9f9f9; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);'>
-            <h3 style='color: #2196F3; text-align: center;'>Promedio de Antigüedad (años)</h3>
+            <h3 style='color: #2196F3; text-align: center;'> Antigüedad (años)</h3>
             <p style='font-size: 32px; font-weight: bold; text-align: center;'>{round(promedio_antiguedad, 2)}</p>
         </div>
         """, unsafe_allow_html=True)
