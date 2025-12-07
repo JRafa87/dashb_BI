@@ -86,8 +86,8 @@ elif selection == "Condiciones Laborales":
     # Gráfico circular de tipo de contrato (solo Indefinido y Temporal)
     tipo_contrato = data_filtered[data_filtered['tipo_contrato'].isin(['Indefinido', 'Temporal'])]  # Filtrar solo Indefinido y Temporal
     tipo_contrato = tipo_contrato['tipo_contrato'].value_counts().reset_index()
-    tipo_contrato.columns = ['Tipo de Contrato', 'Renuncias']
-    fig3 = px.pie(tipo_contrato, names='Tipo de Contrato', values='Renuncias', title="Distribución de Tipo de Contrato")
+    tipo_contrato.columns = ['Tipo de Contrato', 'Cantidad de Renuncias']  # Cambié "Renuncias" a "Cantidad de Renuncias"
+    fig3 = px.pie(tipo_contrato, names='Tipo de Contrato', values='Cantidad de Renuncias', title="Distribución de Tipo de Contrato")
     st.plotly_chart(fig3)
 
     # Gráfico de Última Promoción
@@ -131,6 +131,7 @@ elif selection == "Demográficos":
     # Gráfico de Distancia desde Casa
     fig6 = px.scatter(data_filtered, x='DistanceFromHome', y='Antigüedad', title="Relación entre Distancia desde Casa y Antigüedad")
     st.plotly_chart(fig6)
+
 
 
 
